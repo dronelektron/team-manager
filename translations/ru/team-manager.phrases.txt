@@ -1,0 +1,57 @@
+"Phrases"
+{
+    "Team manager"
+    {
+        "ru"    "Управление командами"
+    }
+
+    "Move player"
+    {
+        "ru"    "Переместить игрока"
+    }
+
+    "Immediately"
+    {
+        "ru"    "Сразу"
+    }
+
+    "After death"
+    {
+        "ru"    "После смерти"
+    }
+
+    "To spectators"
+    {
+        "ru"    "В наблюдатели"
+    }
+
+    "Swap teams"
+    {
+        "ru"    "Поменять команды местами"
+    }
+
+    "Scramble teams"
+    {
+        "ru"    "Перемешать команды"
+    }
+
+    "Balance teams"
+    {
+        "ru"    "Сбалансировать команды"
+    }
+
+    "Move excess players to spectators"
+    {
+        "ru"    "Переместить лишних игроков в наблюдатели"
+    }
+
+    "Distribute excess players"
+    {
+        "ru"    "Распределить лишних игроков"
+    }
+
+    "Select a player"
+    {
+        "ru"    "Выберите игрока"
+    }
+}

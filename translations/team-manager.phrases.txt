@@ -1,0 +1,69 @@
+"Phrases"
+{
+    "Team manager"
+    {
+        "en"    "Team manager"
+    }
+
+    "Move player"
+    {
+        "en"    "Move player"
+    }
+
+    "Immediately"
+    {
+        "en"    "Immediately"
+    }
+
+    "After death"
+    {
+        "en"    "After death"
+    }
+
+    "To spectators"
+    {
+        "en"    "To spectators"
+    }
+
+    "Swap teams"
+    {
+        "en"    "Swap teams"
+    }
+
+    "Scramble teams"
+    {
+        "en"    "Scramble teams"
+    }
+
+    "Balance teams"
+    {
+        "en"    "Balance teams"
+    }
+
+    "Move excess players to spectators"
+    {
+        "en"    "Move excess players to spectators"
+    }
+
+    "Distribute excess players"
+    {
+        "en"    "Distribute excess players"
+    }
+
+    "Select a player"
+    {
+        "en"    "Select a player"
+    }
+
+    "Player item marked"
+    {
+        "#format"   "{1:N},{2:T}"
+        "en"    "{1} [{2}]"
+    }
+
+    "Player item not marked"
+    {
+        "#format"   "{1:N}"
+        "en"    "{1}"
+    }
+}
