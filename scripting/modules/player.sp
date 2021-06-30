@@ -1,6 +1,3 @@
-#include <player>
-#include <team>
-
 static int g_playerCaptures[MAXPLAYERS + 1];
 static bool g_isMovePlayerAfterDeath[MAXPLAYERS + 1];
 static MovePlayerType g_movePlayerType[MAXPLAYERS + 1];

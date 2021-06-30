@@ -1,55 +1,138 @@
-#include <menu>
-#include <player>
+void CreateTeamManagerMenu(int client) {
+    Menu menu = new Menu(MenuHandler_TeamManager);
 
-void CreateTeamManagerMenu(int client, MenuHandler handler) {
-    CreateCommonMenu(client, TEAM_MANAGER, MenuBuilder_TeamManager, handler);
-}
+    menu.SetTitle("%T", TEAM_MANAGER, client);
 
-void CreateMovePlayerMenu(int client, MenuHandler handler) {
-    CreateCommonMenu(client, MOVE_PLAYER, MenuBuilder_MovePlayer, handler);
-}
-
-void CreateBalanceTeamsMenu(int client, MenuHandler handler) {
-    CreateCommonMenu(client, BALANCE_TEAMS, MenuBuilder_BalanceTeams, handler);
-}
-
-void CreatePlayersMenu(int client, MenuHandler handler) {
-    CreateCommonMenu(client, SELECT_PLAYER, MenuBuilder_Players, handler);
-}
-
-void CreateCommonMenu(int client, const char[] titlePhrase, MenuBuilder builder, MenuHandler handler) {
-    Menu menu = new Menu(handler);
-
-    menu.SetTitle("%T", titlePhrase, client);
-
-    Call_StartFunction(INVALID_HANDLE, builder);
-    Call_PushCell(client);
-    Call_PushCell(menu);
-    Call_Finish();
-
-    menu.Display(client, MENU_TIME_FOREVER);
-}
-
-void MenuBuilder_TeamManager(int client, Menu menu) {
     AddFormattedItem(menu, MOVE_PLAYER, client);
     AddFormattedItem(menu, SWAP_TEAMS, client);
     AddFormattedItem(menu, SCRAMBLE_TEAMS, client);
     AddFormattedItem(menu, BALANCE_TEAMS, client);
+
+    menu.Display(client, MENU_TIME_FOREVER);
 }
 
-void MenuBuilder_MovePlayer(int client, Menu menu) {
+public int MenuHandler_TeamManager(Menu menu, MenuAction action, int param1, int param2) {
+    if (IsMenuItemSelected(menu, action)) {
+        char info[MENU_ITEM_INFO_MAX_SIZE];
+
+        menu.GetItem(param2, info, sizeof(info));
+
+        if (StrEqual(info, MOVE_PLAYER)) {
+            CreateMovePlayerMenu(param1);
+        } else if (StrEqual(info, SWAP_TEAMS)) {
+            SwapTeams();
+        } else if (StrEqual(info, SCRAMBLE_TEAMS)) {
+            ScrambleTeams();
+        } else if (StrEqual(info, BALANCE_TEAMS)) {
+            CreateBalanceTeamsMenu(param1);
+        }
+    }
+
+    return 0;
+}
+
+void CreateMovePlayerMenu(int client) {
+    Menu menu = new Menu(MenuHandler_MovePlayer);
+
+    menu.SetTitle("%T", MOVE_PLAYER, client);
+
     AddFormattedItem(menu, IMMEDIATELY, client);
     AddFormattedItem(menu, AFTER_DEATH, client);
     AddFormattedItem(menu, TO_SPECTATORS, client);
+
+    menu.Display(client, MENU_TIME_FOREVER);
 }
 
-void MenuBuilder_BalanceTeams(int client, Menu menu) {
+public int MenuHandler_MovePlayer(Menu menu, MenuAction action, int param1, int param2) {
+    if (IsMenuItemSelected(menu, action)) {
+        char info[MENU_ITEM_INFO_MAX_SIZE];
+
+        menu.GetItem(param2, info, sizeof(info));
+
+        if (StrEqual(info, IMMEDIATELY)) {
+            SetMovePlayerType(param1, MovePlayerType_Immediately);
+        } else if (StrEqual(info, AFTER_DEATH)) {
+            SetMovePlayerType(param1, MovePlayerType_AfterDeath);
+        } else if (StrEqual(info, TO_SPECTATORS)) {
+            SetMovePlayerType(param1, MovePlayerType_ToSpectators);
+        }
+
+        CreatePlayersMenu(param1);
+    }
+
+    return 0;
+}
+
+void CreateBalanceTeamsMenu(int client) {
+    Menu menu = new Menu(MenuHandler_BalanceTeams);
+
+    menu.SetTitle("%T", BALANCE_TEAMS, client);
+
     AddFormattedItem(menu, MOVE_EXCESS_PLAYERS_TO_SPECTATORS, client);
     AddFormattedItem(menu, DISTRIBUTE_EXCESS_PLAYERS, client);
+
+    menu.Display(client, MENU_TIME_FOREVER);
 }
 
-void MenuBuilder_Players(int client, Menu menu) {
-    AddPlayersToMenu(menu, client);
+public int MenuHandler_BalanceTeams(Menu menu, MenuAction action, int param1, int param2) {
+    if (IsMenuItemSelected(menu, action)) {
+        char info[MENU_ITEM_INFO_MAX_SIZE];
+
+        menu.GetItem(param2, info, sizeof(info));
+
+        if (StrEqual(info, MOVE_EXCESS_PLAYERS_TO_SPECTATORS)) {
+            MoveExcessPlayers(MoveExcessPlayerType_ToSpectators);
+        } else if (StrEqual(info, DISTRIBUTE_EXCESS_PLAYERS)) {
+            MoveExcessPlayers(MoveExcessPlayerType_Distribute);
+        }
+    }
+
+    return 0;
+}
+
+void CreatePlayersMenu(int client) {
+    Menu menu = new Menu(MenuHandler_Players);
+
+    menu.SetTitle("%T", SELECT_PLAYER, client);
+
+    AddPlayersToMenu(client, menu);
+
+    menu.Display(client, MENU_TIME_FOREVER);
+}
+
+public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int param2) {
+    if (IsMenuItemSelected(menu, action)) {
+        char info[MENU_ITEM_INFO_MAX_SIZE];
+
+        menu.GetItem(param2, info, sizeof(info));
+
+        int userId = StringToInt(info);
+        int target = GetClientOfUserId(userId);
+
+        if (target == 0) {
+            return 0;
+        }
+
+        switch (GetMovePlayerType(param1)) {
+            case MovePlayerType_Immediately: {
+                SetMovePlayerAfterDeath(target, false);
+                ChangePlayerTeamToOpposite(target);
+            }
+
+            case MovePlayerType_AfterDeath: {
+                bool isMovePlayerAfterDeath = !IsMovePlayerAfterDeath(target);
+
+                SetMovePlayerAfterDeath(target, isMovePlayerAfterDeath);
+            }
+
+            case MovePlayerType_ToSpectators: {
+                SetMovePlayerAfterDeath(target, false);
+                MovePlayerToSpectators(target);
+            }
+        }
+    }
+
+    return 0;
 }
 
 bool IsMenuItemSelected(Menu menu, MenuAction action) {
@@ -70,24 +153,32 @@ void AddFormattedItem(Menu menu, const char[] phrase, int client) {
     menu.AddItem(phrase, buffer);
 }
 
-void AddPlayersToMenu(Menu menu, int client) {
+void AddPlayersToMenu(int client, Menu menu) {
     ArrayList players = GetPlayers(PlayerPredicate_ActivePlayers);
 
     for (int i = 0; i < players.Length; i++) {
         int player = players.Get(i);
         int userId = GetClientUserId(player);
         char userIdStr[TEXT_BUFFER_MAX_SIZE];
-        char playerName[TEXT_BUFFER_MAX_SIZE];
+        char item[TEXT_BUFFER_MAX_SIZE];
 
         IntToString(userId, userIdStr, sizeof(userIdStr));
 
-        if (IsMovePlayerAfterDeath(player)) {
-            Format(playerName, sizeof(playerName), "%t", "Player item marked", player, AFTER_DEATH, client);
-        } else {
-            Format(playerName, sizeof(playerName), "%t", "Player item not marked", player);
+        switch (GetMovePlayerType(client)) {
+            case MovePlayerType_AfterDeath: {
+                if (IsMovePlayerAfterDeath(player)) {
+                    Format(item, sizeof(item), MENU_PLAYER_ITEM_ENABLED, player);
+                } else {
+                    Format(item, sizeof(item), MENU_PLAYER_ITEM_DISABLED, player);
+                }
+            }
+
+            default: {
+                Format(item, sizeof(item), MENU_PLAYER_ITEM, player);
+            }
         }
 
-        menu.AddItem(userIdStr, playerName);
+        menu.AddItem(userIdStr, item);
     }
 
     delete players;

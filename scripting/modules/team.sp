@@ -1,5 +1,3 @@
-#include <team>
-
 void SwapTeams() {
     ArrayList players = GetPlayers(PlayerPredicate_All);
 

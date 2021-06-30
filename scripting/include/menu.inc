@@ -3,8 +3,6 @@
 #endif
 #define _menu_included
 
-typedef MenuBuilder = function void (int client, Menu menu);
-
 const int TEXT_BUFFER_MAX_SIZE = 1024;
 const int MENU_ITEM_INFO_MAX_SIZE = 64;
 
@@ -19,3 +17,7 @@ char BALANCE_TEAMS[] = "Balance teams";
 char MOVE_EXCESS_PLAYERS_TO_SPECTATORS[] = "Move excess players to spectators";
 char DISTRIBUTE_EXCESS_PLAYERS[] = "Distribute excess players";
 char SELECT_PLAYER[] = "Select a player";
+
+char MENU_PLAYER_ITEM[] = "%N";
+char MENU_PLAYER_ITEM_ENABLED[] = "[x] %N";
+char MENU_PLAYER_ITEM_DISABLED[] = "[_] %N";

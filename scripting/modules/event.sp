@@ -1,5 +1,3 @@
-#include <event>
-
 public void Event_PointCaptured(Event event, const char[] name, bool dontBroadcast) {
     char cappers[EVENT_STRING_MAX_SIZE];
 

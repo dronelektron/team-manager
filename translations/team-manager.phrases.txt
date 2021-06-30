@@ -54,16 +54,4 @@
     {
         "en"    "Select a player"
     }
-
-    "Player item marked"
-    {
-        "#format"   "{1:N},{2:T}"
-        "en"    "{1} [{2}]"
-    }
-
-    "Player item not marked"
-    {
-        "#format"   "{1:N}"
-        "en"    "{1}"
-    }
 }
