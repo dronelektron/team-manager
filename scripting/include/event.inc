@@ -3,5 +3,4 @@
 #endif
 #define _event_included
 
-
-#define EVENT_STRING_MAX_SIZE 256
+const int EVENT_STRING_MAX_SIZE = 256;

@@ -3,7 +3,6 @@
 #endif
 #define _player_included
 
-
 enum MovePlayerType {
     MovePlayerType_Immediately = 0,
     MovePlayerType_AfterDeath,
