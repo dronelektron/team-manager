@@ -3,7 +3,6 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
     int client = GetClientOfUserId(userId);
 
     if (IsMovePlayerFlagEnabled(client, MOVE_PLAYER_FLAG_AFTER_DEATH)) {
-        ResetMovePlayerFlags(client);
         ChangePlayerTeamToOpposite(client);
     }
 }
@@ -35,7 +34,6 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
     for (int i = 0; i < players.Length; i++) {
         int player = players.Get(i);
 
-        ResetMovePlayerFlags(player);
         ChangePlayerTeamToOpposite(player);
     }
 

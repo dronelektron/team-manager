@@ -118,7 +118,6 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
 
         switch (GetMovePlayerType(param1)) {
             case MovePlayerType_Immediately: {
-                ResetMovePlayerFlags(target);
                 ChangePlayerTeamToOpposite(target);
             }
 
@@ -139,7 +138,6 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
             }
 
             case MovePlayerType_ToSpectators: {
-                ResetMovePlayerFlags(target);
                 MovePlayerToSpectators(target);
             }
         }
