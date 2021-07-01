@@ -1,5 +1,5 @@
 static int g_playerCaptures[MAXPLAYERS + 1];
-static bool g_isMovePlayerAfterDeath[MAXPLAYERS + 1];
+static int g_movePlayerFlags[MAXPLAYERS + 1];
 static MovePlayerType g_movePlayerType[MAXPLAYERS + 1];
 
 int GetPlayerCaptures(int client) {
@@ -14,12 +14,20 @@ void IncrementPlayerCaptures(int client) {
     g_playerCaptures[client]++;
 }
 
-bool IsMovePlayerAfterDeath(int client) {
-    return g_isMovePlayerAfterDeath[client];
+bool IsMovePlayerFlagEnabled(int client, int flag) {
+    return (g_movePlayerFlags[client] & flag) == flag;
 }
 
-void SetMovePlayerAfterDeath(int client, bool isMoveAfterDeath) {
-    g_isMovePlayerAfterDeath[client] = isMoveAfterDeath;
+void ResetMovePlayerFlags(int client) {
+    g_movePlayerFlags[client] = 0;
+}
+
+void EnableMovePlayerFlag(int client, int flag) {
+    g_movePlayerFlags[client] |= flag;
+}
+
+void DisableMovePlayerFlag(int client, int flag) {
+    g_movePlayerFlags[client] &= ~flag;
 }
 
 MovePlayerType GetMovePlayerType(int client) {
@@ -79,4 +87,8 @@ bool PlayerPredicate_Allies(int client) {
 
 bool PlayerPredicate_Axis(int client) {
     return GetClientTeam(client) == TEAM_AXIS;
+}
+
+bool PlayerPredicate_WithRoundEndFlag(int client) {
+    return IsMovePlayerFlagEnabled(client, MOVE_PLAYER_FLAG_ROUND_END);
 }

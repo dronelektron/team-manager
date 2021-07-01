@@ -38,6 +38,7 @@ void CreateMovePlayerMenu(int client) {
 
     AddFormattedItem(menu, IMMEDIATELY, client);
     AddFormattedItem(menu, AFTER_DEATH, client);
+    AddFormattedItem(menu, AT_THE_END_OF_THE_ROUND, client);
     AddFormattedItem(menu, TO_SPECTATORS, client);
 
     menu.Display(client, MENU_TIME_FOREVER);
@@ -53,6 +54,8 @@ public int MenuHandler_MovePlayer(Menu menu, MenuAction action, int param1, int 
             SetMovePlayerType(param1, MovePlayerType_Immediately);
         } else if (StrEqual(info, AFTER_DEATH)) {
             SetMovePlayerType(param1, MovePlayerType_AfterDeath);
+        } else if (StrEqual(info, AT_THE_END_OF_THE_ROUND)) {
+            SetMovePlayerType(param1, MovePlayerType_RoundEnd);
         } else if (StrEqual(info, TO_SPECTATORS)) {
             SetMovePlayerType(param1, MovePlayerType_ToSpectators);
         }
@@ -115,18 +118,28 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
 
         switch (GetMovePlayerType(param1)) {
             case MovePlayerType_Immediately: {
-                SetMovePlayerAfterDeath(target, false);
+                ResetMovePlayerFlags(target);
                 ChangePlayerTeamToOpposite(target);
             }
 
             case MovePlayerType_AfterDeath: {
-                bool isMovePlayerAfterDeath = !IsMovePlayerAfterDeath(target);
+                if (IsMovePlayerFlagEnabled(target, MOVE_PLAYER_FLAG_AFTER_DEATH)) {
+                    DisableMovePlayerFlag(target, MOVE_PLAYER_FLAG_AFTER_DEATH);
+                } else {
+                    EnableMovePlayerFlag(target, MOVE_PLAYER_FLAG_AFTER_DEATH);
+                }
+            }
 
-                SetMovePlayerAfterDeath(target, isMovePlayerAfterDeath);
+            case MovePlayerType_RoundEnd: {
+                if (IsMovePlayerFlagEnabled(target, MOVE_PLAYER_FLAG_ROUND_END)) {
+                    DisableMovePlayerFlag(target, MOVE_PLAYER_FLAG_ROUND_END);
+                } else {
+                    EnableMovePlayerFlag(target, MOVE_PLAYER_FLAG_ROUND_END);
+                }
             }
 
             case MovePlayerType_ToSpectators: {
-                SetMovePlayerAfterDeath(target, false);
+                ResetMovePlayerFlags(target);
                 MovePlayerToSpectators(target);
             }
         }
@@ -166,11 +179,15 @@ void AddPlayersToMenu(int client, Menu menu) {
 
         switch (GetMovePlayerType(client)) {
             case MovePlayerType_AfterDeath: {
-                if (IsMovePlayerAfterDeath(player)) {
-                    Format(item, sizeof(item), MENU_PLAYER_ITEM_ENABLED, player);
-                } else {
-                    Format(item, sizeof(item), MENU_PLAYER_ITEM_DISABLED, player);
-                }
+                bool isMovePlayerAfterDeath = IsMovePlayerFlagEnabled(player, MOVE_PLAYER_FLAG_AFTER_DEATH);
+
+                FormatPlayerItem(item, sizeof(item), player, isMovePlayerAfterDeath);
+            }
+
+            case MovePlayerType_RoundEnd: {
+                bool isMovePlayerAfterRoundEnd = IsMovePlayerFlagEnabled(player, MOVE_PLAYER_FLAG_ROUND_END);
+
+                FormatPlayerItem(item, sizeof(item), player, isMovePlayerAfterRoundEnd);
             }
 
             default: {
@@ -182,4 +199,12 @@ void AddPlayersToMenu(int client, Menu menu) {
     }
 
     delete players;
+}
+
+void FormatPlayerItem(char[] item, int itemMaxLen, int player, bool condition) {
+    if (condition) {
+        Format(item, itemMaxLen, MENU_PLAYER_ITEM_ENABLED, player);
+    } else {
+        Format(item, itemMaxLen, MENU_PLAYER_ITEM_DISABLED, player);
+    }
 }

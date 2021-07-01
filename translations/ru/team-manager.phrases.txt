@@ -20,6 +20,11 @@
         "ru"    "После смерти"
     }
 
+    "At the end of the round"
+    {
+        "ru"    "В конце раунда"
+    }
+
     "To spectators"
     {
         "ru"    "В наблюдатели"

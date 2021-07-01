@@ -20,6 +20,11 @@
         "en"    "After death"
     }
 
+    "At the end of the round"
+    {
+        "en"    "At the end of the round"
+    }
+
     "To spectators"
     {
         "en"    "To spectators"

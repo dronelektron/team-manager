@@ -10,6 +10,7 @@ char TEAM_MANAGER[] = "Team manager";
 char MOVE_PLAYER[] = "Move player";
 char IMMEDIATELY[] = "Immediately";
 char AFTER_DEATH[] = "After death";
+char AT_THE_END_OF_THE_ROUND[] = "At the end of the round";
 char TO_SPECTATORS[] = "To spectators";
 char SWAP_TEAMS[] = "Swap teams";
 char SCRAMBLE_TEAMS[] = "Scramble teams";

@@ -14,14 +14,16 @@ public Plugin myinfo = {
 
 public void OnPluginStart() {
     RegAdminCmd("sm_teammanager", AdminCmd_TeamManager, ADMFLAG_GENERIC, "Open team manager menu");
-    HookEvent("dod_point_captured", Event_PointCaptured);
-    HookEvent("player_death", Event_PlayerDeath);
+    HookEvent("player_death", Event_PlayerDeath, EventHookMode_Post);
+    HookEvent("player_team", Event_PlayerTeam, EventHookMode_Pre);
+    HookEvent("dod_point_captured", Event_PointCaptured, EventHookMode_Post);
+    HookEvent("dod_round_start", Event_RoundStart, EventHookMode_Post);
     LoadTranslations("team-manager.phrases");
 }
 
 public void OnClientConnected(int client) {
     ResetPlayerCaptures(client);
-    SetMovePlayerAfterDeath(client, false);
+    ResetMovePlayerFlags(client);
 }
 
 public Action AdminCmd_TeamManager(int client, int args) {
