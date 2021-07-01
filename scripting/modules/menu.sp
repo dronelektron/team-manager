@@ -1,36 +1,3 @@
-void CreateTeamManagerMenu(int client) {
-    Menu menu = new Menu(MenuHandler_TeamManager);
-
-    menu.SetTitle("%T", TEAM_MANAGER, client);
-
-    AddFormattedItem(menu, MOVE_PLAYER, client);
-    AddFormattedItem(menu, SWAP_TEAMS, client);
-    AddFormattedItem(menu, SCRAMBLE_TEAMS, client);
-    AddFormattedItem(menu, BALANCE_TEAMS, client);
-
-    menu.Display(client, MENU_TIME_FOREVER);
-}
-
-public int MenuHandler_TeamManager(Menu menu, MenuAction action, int param1, int param2) {
-    if (IsMenuItemSelected(menu, action)) {
-        char info[MENU_ITEM_INFO_MAX_SIZE];
-
-        menu.GetItem(param2, info, sizeof(info));
-
-        if (StrEqual(info, MOVE_PLAYER)) {
-            CreateMovePlayerMenu(param1);
-        } else if (StrEqual(info, SWAP_TEAMS)) {
-            SwapTeams();
-        } else if (StrEqual(info, SCRAMBLE_TEAMS)) {
-            ScrambleTeams();
-        } else if (StrEqual(info, BALANCE_TEAMS)) {
-            CreateBalanceTeamsMenu(param1);
-        }
-    }
-
-    return 0;
-}
-
 void CreateMovePlayerMenu(int client) {
     Menu menu = new Menu(MenuHandler_MovePlayer);
 
@@ -41,11 +8,12 @@ void CreateMovePlayerMenu(int client) {
     AddFormattedItem(menu, AT_THE_END_OF_THE_ROUND, client);
     AddFormattedItem(menu, TO_SPECTATORS, client);
 
+    menu.ExitBackButton = true;
     menu.Display(client, MENU_TIME_FOREVER);
 }
 
 public int MenuHandler_MovePlayer(Menu menu, MenuAction action, int param1, int param2) {
-    if (IsMenuItemSelected(menu, action)) {
+    if (action == MenuAction_Select) {
         char info[MENU_ITEM_INFO_MAX_SIZE];
 
         menu.GetItem(param2, info, sizeof(info));
@@ -61,6 +29,8 @@ public int MenuHandler_MovePlayer(Menu menu, MenuAction action, int param1, int 
         }
 
         CreatePlayersMenu(param1);
+    } else {
+        MenuHandler_Default(menu, action, param1, param2)
     }
 
     return 0;
@@ -74,11 +44,12 @@ void CreateBalanceTeamsMenu(int client) {
     AddFormattedItem(menu, MOVE_EXCESS_PLAYERS_TO_SPECTATORS, client);
     AddFormattedItem(menu, DISTRIBUTE_EXCESS_PLAYERS, client);
 
+    menu.ExitBackButton = true;
     menu.Display(client, MENU_TIME_FOREVER);
 }
 
 public int MenuHandler_BalanceTeams(Menu menu, MenuAction action, int param1, int param2) {
-    if (IsMenuItemSelected(menu, action)) {
+    if (action == MenuAction_Select) {
         char info[MENU_ITEM_INFO_MAX_SIZE];
 
         menu.GetItem(param2, info, sizeof(info));
@@ -88,6 +59,8 @@ public int MenuHandler_BalanceTeams(Menu menu, MenuAction action, int param1, in
         } else if (StrEqual(info, DISTRIBUTE_EXCESS_PLAYERS)) {
             MoveExcessPlayers(MoveExcessPlayerType_Distribute);
         }
+    } else {
+        MenuHandler_Default(menu, action, param1, param2)
     }
 
     return 0;
@@ -100,11 +73,12 @@ void CreatePlayersMenu(int client) {
 
     AddPlayersToMenu(client, menu);
 
+    menu.ExitBackButton = true;
     menu.Display(client, MENU_TIME_FOREVER);
 }
 
 public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int param2) {
-    if (IsMenuItemSelected(menu, action)) {
+    if (action == MenuAction_Select) {
         char info[MENU_ITEM_INFO_MAX_SIZE];
 
         menu.GetItem(param2, info, sizeof(info));
@@ -141,19 +115,25 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
                 MovePlayerToSpectators(target);
             }
         }
+    } else if (action == MenuAction_Cancel) {
+        if (param2 == MenuCancel_ExitBack) {
+            CreateMovePlayerMenu(param1);
+        }
+    } else {
+        MenuHandler_Default(menu, action, param1, param2)
     }
 
     return 0;
 }
 
-bool IsMenuItemSelected(Menu menu, MenuAction action) {
+void MenuHandler_Default(Menu menu, MenuAction action, int param1, int param2) {
     if (action == MenuAction_End) {
         delete menu;
-
-        return false;
+    } else if (action == MenuAction_Cancel) {
+        if (param2 == MenuCancel_ExitBack && g_adminMenu != null) {
+            g_adminMenu.Display(param1, TopMenuPosition_LastCategory);
+        }
     }
-
-    return action == MenuAction_Select;
 }
 
 void AddFormattedItem(Menu menu, const char[] phrase, int client) {
