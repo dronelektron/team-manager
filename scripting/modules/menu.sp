@@ -5,7 +5,7 @@ void CreateMovePlayerMenu(int client) {
 
     AddFormattedItem(menu, IMMEDIATELY, client);
     AddFormattedItem(menu, AFTER_DEATH, client);
-    AddFormattedItem(menu, AT_THE_END_OF_THE_ROUND, client);
+    AddFormattedItem(menu, AFTER_ROUND_END, client);
     AddFormattedItem(menu, TO_SPECTATORS, client);
 
     menu.ExitBackButton = true;
@@ -22,8 +22,8 @@ public int MenuHandler_MovePlayer(Menu menu, MenuAction action, int param1, int 
             SetMovePlayerType(param1, MovePlayerType_Immediately);
         } else if (StrEqual(info, AFTER_DEATH)) {
             SetMovePlayerType(param1, MovePlayerType_AfterDeath);
-        } else if (StrEqual(info, AT_THE_END_OF_THE_ROUND)) {
-            SetMovePlayerType(param1, MovePlayerType_RoundEnd);
+        } else if (StrEqual(info, AFTER_ROUND_END)) {
+            SetMovePlayerType(param1, MovePlayerType_AfterRoundEnd);
         } else if (StrEqual(info, TO_SPECTATORS)) {
             SetMovePlayerType(param1, MovePlayerType_ToSpectators);
         }
@@ -54,10 +54,17 @@ public int MenuHandler_BalanceTeams(Menu menu, MenuAction action, int param1, in
 
         menu.GetItem(param2, info, sizeof(info));
 
+        bool isExcessPlayersWasMoved = false;
+
         if (StrEqual(info, MOVE_EXCESS_PLAYERS_TO_SPECTATORS)) {
-            MoveExcessPlayers(MoveExcessPlayerType_ToSpectators);
+            isExcessPlayersWasMoved = MoveExcessPlayers(MoveExcessPlayerType_ToSpectators);
         } else if (StrEqual(info, DISTRIBUTE_EXCESS_PLAYERS)) {
-            MoveExcessPlayers(MoveExcessPlayerType_Distribute);
+            isExcessPlayersWasMoved = MoveExcessPlayers(MoveExcessPlayerType_Distribute);
+        }
+
+        if (isExcessPlayersWasMoved) {
+            CPrintToChatAll("%t %t", "Prefix", "Teams was balanced");
+            LogAction(param1, -1, "\"%L\" balanced teams", param1);
         }
     } else {
         MenuHandler_Default(menu, action, param1, param2)
@@ -87,32 +94,49 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
         int target = GetClientOfUserId(userId);
 
         if (target == 0) {
+            CPrintToChat(param1, "%t %t", "Prefix", "Player is no longer available");
+            LogAction(param1, -1, "\"%L\" tried to move player", param1);
+
             return 0;
         }
 
         switch (GetMovePlayerType(param1)) {
             case MovePlayerType_Immediately: {
-                ChangePlayerTeamToOpposite(target);
+                if (ChangePlayerTeamToOpposite(target)) {
+                    CPrintToChatAll("%t %t", "Prefix", "Player was moved", target, OPPOSING_TEAM);
+                    LogAction(param1, target, "\"%L\" moved \"%L\" to %s", param1, target, OPPOSING_TEAM);
+                }
             }
 
             case MovePlayerType_AfterDeath: {
                 if (IsMovePlayerFlagEnabled(target, MOVE_PLAYER_FLAG_AFTER_DEATH)) {
                     DisableMovePlayerFlag(target, MOVE_PLAYER_FLAG_AFTER_DEATH);
+                    CPrintToChatAll("%t %t", "Prefix", "Player will not be moved", target, AFTER_DEATH);
+                    LogAction(param1, target, "\"%L\" disabled flag '%s' on \"%L\"", param1, AFTER_DEATH, target);
                 } else {
                     EnableMovePlayerFlag(target, MOVE_PLAYER_FLAG_AFTER_DEATH);
+                    CPrintToChatAll("%t %t", "Prefix", "Player will be moved", target, AFTER_DEATH);
+                    LogAction(param1, target, "\"%L\" enabled flag '%s' on \"%L\"", param1, AFTER_DEATH, target);
                 }
             }
 
-            case MovePlayerType_RoundEnd: {
+            case MovePlayerType_AfterRoundEnd: {
                 if (IsMovePlayerFlagEnabled(target, MOVE_PLAYER_FLAG_ROUND_END)) {
                     DisableMovePlayerFlag(target, MOVE_PLAYER_FLAG_ROUND_END);
+                    CPrintToChatAll("%t %t", "Prefix", "Player will not be moved", target, AFTER_ROUND_END);
+                    LogAction(param1, target, "\"%L\" disabled flag '%s' on \"%L\"", param1, AFTER_ROUND_END, target);
                 } else {
                     EnableMovePlayerFlag(target, MOVE_PLAYER_FLAG_ROUND_END);
+                    CPrintToChatAll("%t %t", "Prefix", "Player will be moved", target, AFTER_ROUND_END);
+                    LogAction(param1, target, "\"%L\" enabled flag '%s' on \"%L\"", param1, AFTER_ROUND_END, target);
                 }
             }
 
             case MovePlayerType_ToSpectators: {
-                MovePlayerToSpectators(target);
+                if (MovePlayerToSpectators(target)) {
+                    CPrintToChatAll("%t %t", "Prefix", "Player was moved", target, SPECTATORS);
+                    LogAction(param1, target, "\"%L\" moved \"%L\" to %s", param1, target, SPECTATORS);
+                }
             }
         }
     } else if (action == MenuAction_Cancel) {
@@ -162,7 +186,7 @@ void AddPlayersToMenu(int client, Menu menu) {
                 FormatPlayerItem(item, sizeof(item), player, isMovePlayerAfterDeath);
             }
 
-            case MovePlayerType_RoundEnd: {
+            case MovePlayerType_AfterRoundEnd: {
                 bool isMovePlayerAfterRoundEnd = IsMovePlayerFlagEnabled(player, MOVE_PLAYER_FLAG_ROUND_END);
 
                 FormatPlayerItem(item, sizeof(item), player, isMovePlayerAfterRoundEnd);

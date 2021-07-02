@@ -10,7 +10,7 @@ char TEAM_MANAGER[] = "Team manager";
 char MOVE_PLAYER[] = "Move player";
 char IMMEDIATELY[] = "Immediately";
 char AFTER_DEATH[] = "After death";
-char AT_THE_END_OF_THE_ROUND[] = "At the end of the round";
+char AFTER_ROUND_END[] = "After round end";
 char TO_SPECTATORS[] = "To spectators";
 char SWAP_TEAMS[] = "Swap teams";
 char SCRAMBLE_TEAMS[] = "Scramble teams";
@@ -18,6 +18,9 @@ char BALANCE_TEAMS[] = "Balance teams";
 char MOVE_EXCESS_PLAYERS_TO_SPECTATORS[] = "Move excess players to spectators";
 char DISTRIBUTE_EXCESS_PLAYERS[] = "Distribute excess players";
 char SELECT_PLAYER[] = "Select a player";
+
+char OPPOSING_TEAM[] = "opposing team";
+char SPECTATORS[] = "spectators";
 
 char MENU_PLAYER_ITEM[] = "%N";
 char MENU_PLAYER_ITEM_ENABLED[] = "[x] %N";

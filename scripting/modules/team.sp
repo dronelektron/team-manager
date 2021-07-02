@@ -1,32 +1,44 @@
-void SwapTeams() {
+bool SwapTeams() {
     ArrayList players = GetPlayers(PlayerPredicate_All);
+    bool result = false;
 
     for (int i = 0; i < players.Length; i++) {
         int player = players.Get(i);
 
-        ChangePlayerTeamToOpposite(player);
+        result |= ChangePlayerTeamToOpposite(player);
     }
 
     delete players;
+
+    return result;
 }
 
-void ChangePlayerTeamToOpposite(int client) {
+bool ChangePlayerTeamToOpposite(int client) {
     int team = GetClientTeam(client);
 
     if (team == TEAM_ALLIES) {
         ChangeClientTeam(client, TEAM_AXIS);
+
+        return true;
     } else if (team == TEAM_AXIS) {
         ChangeClientTeam(client, TEAM_ALLIES);
+
+        return true;
     }
+
+    return false;
 }
 
-void ScrambleTeams() {
+bool ScrambleTeams() {
     ArrayList players = GetPlayers(PlayerPredicate_ActivePlayers);
 
     FisherYatesShuffle(players);
-    AssignTeams(players);
+
+    bool result = AssignTeams(players);
 
     delete players;
+
+    return result;
 }
 
 void FisherYatesShuffle(ArrayList array) {
@@ -37,8 +49,9 @@ void FisherYatesShuffle(ArrayList array) {
     }
 }
 
-void AssignTeams(ArrayList players) {
+bool AssignTeams(ArrayList players) {
     int priorityTeam = GetRandomInt(TEAM_ALLIES, TEAM_AXIS);
+    bool result = false;
 
     for (int i = 0; i < players.Length; i++) {
         int player = players.Get(i);
@@ -50,16 +63,23 @@ void AssignTeams(ArrayList players) {
             team -= i % 2;
         }
 
+        int oldTeam = GetClientTeam(player);
+
+        result |= (oldTeam != team);
+
         ChangeClientTeam(player, team);
     }
+
+    return result;
 }
 
-void MoveExcessPlayers(MoveExcessPlayerType type) {
+bool MoveExcessPlayers(MoveExcessPlayerType type) {
     ArrayList allies = GetPlayers(PlayerPredicate_Allies);
     ArrayList axis = GetPlayers(PlayerPredicate_Axis);
     int diff = allies.Length - axis.Length;
     int playersCount = IntAbs(diff);
     ArrayList excessPlayers = null;
+    bool result = false;
 
     if (diff > UNBALANCE_LIMIT) {
         allies.SortCustom(SortFunc_ByLowestRank);
@@ -81,26 +101,40 @@ void MoveExcessPlayers(MoveExcessPlayerType type) {
         }
 
         delete excessPlayers;
+
+        result = true;
     }
 
     delete axis;
     delete allies;
+
+    return result;
 }
 
 int IntAbs(int number) {
     return number < 0 ? -number : number;
 }
 
-void MovePlayersToSpectators(ArrayList players) {
+bool MovePlayersToSpectators(ArrayList players) {
+    bool result = false;
+
     for (int i = 0; i < players.Length; i++) {
         int player = players.Get(i);
 
-        MovePlayerToSpectators(player);
+        result |= MovePlayerToSpectators(player);
     }
+
+    return result;
 }
 
-void MovePlayerToSpectators(int client) {
-    ChangeClientTeam(client, TEAM_SPECTATOR);
+bool MovePlayerToSpectators(int client) {
+    if (GetClientTeam(client) != TEAM_SPECTATOR) {
+        ChangeClientTeam(client, TEAM_SPECTATOR);
+
+        return true;
+    }
+
+    return false;
 }
 
 int SortFunc_ByLowestRank(int index1, int index2, Handle array, Handle hndl) {

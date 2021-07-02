@@ -6,7 +6,7 @@
 enum MovePlayerType {
     MovePlayerType_Immediately = 0,
     MovePlayerType_AfterDeath,
-    MovePlayerType_RoundEnd,
+    MovePlayerType_AfterRoundEnd,
     MovePlayerType_ToSpectators
 };
 

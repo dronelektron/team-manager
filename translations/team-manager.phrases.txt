@@ -20,9 +20,9 @@
         "en"    "After death"
     }
 
-    "At the end of the round"
+    "After round end"
     {
-        "en"    "At the end of the round"
+        "en"    "After round end"
     }
 
     "To spectators"
@@ -58,5 +58,58 @@
     "Select a player"
     {
         "en"    "Select a player"
+    }
+
+    "Prefix"
+    {
+        "en"    "{coral}[Team manager]{default}"
+    }
+
+    "Player is no longer available"
+    {
+        "en"    "The player you selected is no longer available"
+    }
+
+    "Player was moved"
+    {
+        "#format"   "{1:N},{2:t}"
+        "en"    "The player {green}{1} {default}was moved to the {yellow}{2}"
+    }
+
+    "opposing team"
+    {
+        "en"    "opposing team"
+    }
+
+    "spectators"
+    {
+        "en"    "spectators"
+    }
+
+    "Player will be moved"
+    {
+        "#format"   "{1:N},{2:t}"
+        "en"    "The player {green}{1} {default}will be moved to the opposing team ({2})"
+    }
+
+    "Player will not be moved"
+    {
+        "#format"   "{1:N},{2:t}"
+        "en"    "The player {green}{1} {default}will not be moved to the opposing team ({2})"
+    }
+
+    "Teams was swapped"
+    {
+        "en"    "The teams was swapped"
+    }
+
+    "Teams was scrambled"
+    {
+        "en"    "The teams was scrambled"
+    }
+
+    "Teams was balanced"
+    {
+        "en"    "The teams was balanced"
     }
 }

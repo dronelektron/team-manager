@@ -1,6 +1,7 @@
 #include <sourcemod>
 #undef REQUIRE_PLUGIN
 #include <adminmenu>
+#include <morecolors>
 #include <event>
 #include <menu>
 #include <player>
@@ -84,9 +85,15 @@ public void TopMenuHandler_TeamManager(TopMenu topmenu, TopMenuAction action, To
         if (topobj_id == g_menuItemMovePlayer) {
             CreateMovePlayerMenu(param);
         } else if (topobj_id == g_menuItemSwapTeams) {
-            SwapTeams();
+            if (SwapTeams()) {
+                CPrintToChatAll("%t %t", "Prefix", "Teams was swapped");
+                LogAction(param, -1, "\"%L\" swapped teams", param);
+            }
         } else if (topobj_id == g_menuItemScrambleTeams) {
-            ScrambleTeams();
+            if (ScrambleTeams()) {
+                CPrintToChatAll("%t %t", "Prefix", "Teams was scrambled");
+                LogAction(param, -1, "\"%L\" scrambled teams", param);
+            }
         } else if (topobj_id == g_menuItemBalanceTeams) {
             CreateBalanceTeamsMenu(param);
         }

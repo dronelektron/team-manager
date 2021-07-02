@@ -20,7 +20,7 @@
         "ru"    "После смерти"
     }
 
-    "At the end of the round"
+    "After round end"
     {
         "ru"    "В конце раунда"
     }
@@ -58,5 +58,50 @@
     "Select a player"
     {
         "ru"    "Выберите игрока"
+    }
+
+    "Player is no longer available"
+    {
+        "ru"    "Выбранный вами игрок больше не доступен"
+    }
+
+    "Player was moved"
+    {
+        "ru"    "Игрок {green}{1} {default}был перемещен в {yellow}{2}"
+    }
+
+    "opposing team"
+    {
+        "ru"    "противоположную команду"
+    }
+
+    "spectators"
+    {
+        "ru"    "наблюдатели"
+    }
+
+    "Player will be moved"
+    {
+        "ru"    "Игрок {green}{1} {default}будет перемещен в противоположную команду ({2})"
+    }
+
+    "Player will not be moved"
+    {
+        "ru"    "Игрок {green}{1} {default}не будет перемещен в противоположную команду ({2})"
+    }
+
+    "Teams was swapped"
+    {
+        "ru"    "Команды поменялись местами"
+    }
+
+    "Teams was scrambled"
+    {
+        "ru"    "Команды были перемешаны"
+    }
+
+    "Teams was balanced"
+    {
+        "ru"    "Команды были сбалансированы"
     }
 }
