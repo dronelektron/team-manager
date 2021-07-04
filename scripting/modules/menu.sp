@@ -150,6 +150,7 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
         int target = GetClientOfUserId(userId);
 
         if (target == 0) {
+            CreatePlayersMenu(param1);
             CPrintToChat(param1, "%t %t", "Prefix", "Player is no longer available");
             LogAction(param1, -1, "\"%L\" tried to move player", param1);
 
