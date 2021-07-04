@@ -2,16 +2,16 @@
 
 Allows you to perform various operations on teams:
 
-1. Move player
-	1. Immediately
-	2. After death
-	3. After round end
-	4. To spectators
-2. Swap teams
-3. Scramble teams
-4. Balance teams
-	1. Move excess players to spectators
-	2. Distribute excess players
+* Move player
+	* Immediately
+	* After death
+	* After round end
+	* To spectators
+* Swap teams
+* Scramble teams
+* Balance teams
+	* Move excess players to spectators
+	* Distribute excess players
 
 ### Supported Games
 
