@@ -192,6 +192,8 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
                 }
             }
         }
+
+        CreatePlayersMenu(param1);
     } else if (action == MenuAction_Cancel) {
         if (param2 == MenuCancel_ExitBack) {
             CreateMovePlayerMenu(param1);

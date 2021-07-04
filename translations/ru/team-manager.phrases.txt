@@ -82,12 +82,12 @@
 
     "Player will be moved"
     {
-        "ru"    "Игрок {green}{1} {default}будет перемещен в противоположную команду ({2})"
+        "ru"    "Игрок {green}{1} {default}будет перемещен в противоположную команду ({yellow}{2}{default})"
     }
 
     "Player will not be moved"
     {
-        "ru"    "Игрок {green}{1} {default}не будет перемещен в противоположную команду ({2})"
+        "ru"    "Игрок {green}{1} {default}не будет перемещен в противоположную команду ({yellow}{2}{default})"
     }
 
     "Teams was swapped"
