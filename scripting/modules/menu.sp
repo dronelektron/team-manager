@@ -118,6 +118,9 @@ public int MenuHandler_BalanceTeams(Menu menu, MenuAction action, int param1, in
         if (isExcessPlayersWasMoved) {
             CPrintToChatAll("%t %t", "Prefix", "Teams was balanced");
             LogAction(param1, -1, "\"%L\" balanced teams", param1);
+        } else {
+            CPrintToChat(param1, "%t %t", "Prefix", "Teams already balanced");
+            LogAction(param1, -1, "\"%L\" tried to balance teams", param1);
         }
     } else {
         MenuHandler_Default(menu, action, param1, param2)

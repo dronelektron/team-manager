@@ -112,4 +112,9 @@
     {
         "en"    "The teams was balanced"
     }
+
+    "Teams already balanced"
+    {
+        "en"    "The teams are already balanced"
+    }
 }
