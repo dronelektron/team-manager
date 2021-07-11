@@ -21,3 +21,12 @@ Allows you to perform various operations on teams:
 
 * Download latest [release](https://github.com/dronelektron/team-manager/releases) (compiled for SourceMod 1.10)
 * Extract "plugins" and "translations" folders to "addons/sourcemod" folder of your server
+
+### Compiling
+
+Make sure, that you installed "spcomp" and you have it in your "PATH" variable.
+
+* Clone this repository
+* Open terminal with path pointing to "scripting" folder of this plugin
+* Type the following:
+```spcomp team-manager.sp modules/*.sp -i include -o ../plugins/team-manager.smx```
