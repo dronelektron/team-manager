@@ -1,9 +1,11 @@
 #include <sourcemod>
-#include <morecolors>
-#include <event>
-#include <menu>
-#include <player>
-#include <team>
+
+#include "morecolors"
+#include "event"
+#include "menu"
+#include "player"
+#include "team"
+
 #undef REQUIRE_PLUGIN
 #include <adminmenu>
 
