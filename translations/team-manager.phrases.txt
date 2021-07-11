@@ -68,19 +68,19 @@
     "Player was moved"
     {
         "#format"   "{1:N}"
-        "en"    "The player {green}{1} {default}was moved"
+        "en"    "The player {1} was moved"
     }
 
     "Player will be moved"
     {
         "#format"   "{1:N},{2:t}"
-        "en"    "The player {green}{1} {default}will be moved ({yellow}{2}{default})"
+        "en"    "The player {1} will be moved ({2})"
     }
 
     "Player will not be moved"
     {
         "#format"   "{1:N},{2:t}"
-        "en"    "The player {green}{1} {default}won't be moved ({yellow}{2}{default})"
+        "en"    "The player {1} won't be moved ({2})"
     }
 
     "Teams was swapped"

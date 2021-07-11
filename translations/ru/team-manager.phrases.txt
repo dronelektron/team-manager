@@ -67,17 +67,17 @@
 
     "Player was moved"
     {
-        "ru"    "Игрок {green}{1} {default}был перемещен"
+        "ru"    "Игрок {1} был перемещен"
     }
 
     "Player will be moved"
     {
-        "ru"    "Игрок {green}{1} {default}будет перемещен ({yellow}{2}{default})"
+        "ru"    "Игрок {1} будет перемещен ({2})"
     }
 
     "Player will not be moved"
     {
-        "ru"    "Игрок {green}{1} {default}не будет перемещен ({yellow}{2}{default})"
+        "ru"    "Игрок {1} не будет перемещен ({2})"
     }
 
     "Teams was swapped"

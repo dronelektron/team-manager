@@ -3,4 +3,4 @@
 #endif
 #define _action_included
 
-char PREFIX_COLORED[] = "{orange}[{white}Team manager{orange}]{default} ";
+char PREFIX[] = "[Team manager] ";

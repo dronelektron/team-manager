@@ -77,7 +77,7 @@ public int MenuHandler_MovePlayer(Menu menu, MenuAction action, int param1, int 
 
         CreatePlayersMenu(param1);
     } else {
-        MenuHandler_Default(menu, action, param1, param2)
+        MenuHandler_Default(menu, action, param1, param2);
     }
 
     return 0;
@@ -110,10 +110,10 @@ public int MenuHandler_BalanceTeams(Menu menu, MenuAction action, int param1, in
         bool isTeamsBalanced = PerformTeamsBalancing(param1, moveType);
 
         if (!isTeamsBalanced) {
-            CPrintToChat(param1, "%s%t", PREFIX_COLORED, "Teams already balanced");
+            PrintToChat(param1, "%s%t", PREFIX, "Teams already balanced");
         }
     } else {
-        MenuHandler_Default(menu, action, param1, param2)
+        MenuHandler_Default(menu, action, param1, param2);
     }
 
     return 0;
@@ -141,7 +141,7 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
 
         if (target == 0) {
             CreatePlayersMenu(param1);
-            CPrintToChat(param1, "%s%t", PREFIX_COLORED, "Player is no longer available");
+            PrintToChat(param1, "%s%t", PREFIX, "Player is no longer available");
 
             return 0;
         }
@@ -155,7 +155,7 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
             CreateMovePlayerMenu(param1);
         }
     } else {
-        MenuHandler_Default(menu, action, param1, param2)
+        MenuHandler_Default(menu, action, param1, param2);
     }
 
     return 0;
