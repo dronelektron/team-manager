@@ -13,7 +13,7 @@ public Action Event_PlayerTeam(Event event, const char[] name, bool dontBroadcas
 
     ResetMovePlayerFlags(client);
 
-    return Plugin_Handled;
+    return Plugin_Continue;
 }
 
 public void Event_PointCaptured(Event event, const char[] name, bool dontBroadcast) {
