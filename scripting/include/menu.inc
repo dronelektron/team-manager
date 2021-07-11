@@ -6,6 +6,8 @@
 const int TEXT_BUFFER_MAX_SIZE = 1024;
 const int MENU_ITEM_INFO_MAX_SIZE = 64;
 
+char PREFIX_COLORED[] = "{orange}[{white}Team manager{orange}]{default} ";
+
 char TEAM_MANAGER[] = "Team manager";
 char MOVE_PLAYER[] = "Move player";
 char IMMEDIATELY[] = "Immediately";

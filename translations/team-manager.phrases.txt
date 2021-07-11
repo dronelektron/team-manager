@@ -60,11 +60,6 @@
         "en"    "Select a player"
     }
 
-    "Prefix"
-    {
-        "en"    "{orange}[{white}Team manager{orange}]{default}"
-    }
-
     "Player is no longer available"
     {
         "en"    "The player you selected is no longer available"
