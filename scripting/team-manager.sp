@@ -1,6 +1,7 @@
 #include <sourcemod>
 
 #include "morecolors"
+#include "action"
 #include "event"
 #include "menu"
 #include "player"

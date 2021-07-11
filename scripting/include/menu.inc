@@ -6,8 +6,6 @@
 const int TEXT_BUFFER_MAX_SIZE = 1024;
 const int MENU_ITEM_INFO_MAX_SIZE = 64;
 
-char PREFIX_COLORED[] = "{orange}[{white}Team manager{orange}]{default} ";
-
 char TEAM_MANAGER[] = "Team manager";
 char MOVE_PLAYER[] = "Move player";
 char IMMEDIATELY[] = "Immediately";
@@ -20,9 +18,6 @@ char BALANCE_TEAMS[] = "Balance teams";
 char MOVE_EXCESS_PLAYERS_TO_SPECTATORS[] = "Move excess players to spectators";
 char DISTRIBUTE_EXCESS_PLAYERS[] = "Distribute excess players";
 char SELECT_PLAYER[] = "Select a player";
-
-char OPPOSING_TEAM[] = "opposing team";
-char SPECTATORS[] = "spectators";
 
 char MENU_PLAYER_ITEM[] = "%N";
 char MENU_PLAYER_ITEM_ENABLED[] = "[x] %N";

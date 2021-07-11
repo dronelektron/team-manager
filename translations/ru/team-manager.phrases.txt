@@ -67,27 +67,17 @@
 
     "Player was moved"
     {
-        "ru"    "Игрок {green}{1} {default}был перемещен в {yellow}{2}"
-    }
-
-    "opposing team"
-    {
-        "ru"    "противоположную команду"
-    }
-
-    "spectators"
-    {
-        "ru"    "наблюдатели"
+        "ru"    "Игрок {green}{1} {default}был перемещен"
     }
 
     "Player will be moved"
     {
-        "ru"    "Игрок {green}{1} {default}будет перемещен в противоположную команду ({yellow}{2}{default})"
+        "ru"    "Игрок {green}{1} {default}будет перемещен ({yellow}{2}{default})"
     }
 
     "Player will not be moved"
     {
-        "ru"    "Игрок {green}{1} {default}не будет перемещен в противоположную команду ({yellow}{2}{default})"
+        "ru"    "Игрок {green}{1} {default}не будет перемещен ({yellow}{2}{default})"
     }
 
     "Teams was swapped"

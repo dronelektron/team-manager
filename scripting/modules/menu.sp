@@ -36,15 +36,9 @@ public void TopMenuHandler_TeamManager(TopMenu topmenu, TopMenuAction action, To
         if (topobj_id == g_menuItemMovePlayer) {
             CreateMovePlayerMenu(param);
         } else if (topobj_id == g_menuItemSwapTeams) {
-            if (SwapTeams()) {
-                CShowActivity2(param, PREFIX_COLORED, "%t", "Teams was swapped");
-                LogAction(param, -1, "\"%L\" swapped teams", param);
-            }
+            PerformTeamsSwapping(param);
         } else if (topobj_id == g_menuItemScrambleTeams) {
-            if (ScrambleTeams()) {
-                CShowActivity2(param, PREFIX_COLORED, "%t", "Teams was scrambled");
-                LogAction(param, -1, "\"%L\" scrambled teams", param);
-            }
+            PerformTeamsScrambling(param);
         } else if (topobj_id == g_menuItemBalanceTeams) {
             CreateBalanceTeamsMenu(param);
         }
@@ -77,7 +71,7 @@ public int MenuHandler_MovePlayer(Menu menu, MenuAction action, int param1, int 
             SetMovePlayerType(param1, MovePlayerType_AfterDeath);
         } else if (StrEqual(info, AFTER_ROUND_END)) {
             SetMovePlayerType(param1, MovePlayerType_AfterRoundEnd);
-        } else if (StrEqual(info, TO_SPECTATORS)) {
+        } else {
             SetMovePlayerType(param1, MovePlayerType_ToSpectators);
         }
 
@@ -107,19 +101,16 @@ public int MenuHandler_BalanceTeams(Menu menu, MenuAction action, int param1, in
 
         menu.GetItem(param2, info, sizeof(info));
 
-        bool isExcessPlayersWasMoved = false;
+        MoveExcessPlayerType moveType = MoveExcessPlayerType_ToSpectators;
 
-        if (StrEqual(info, MOVE_EXCESS_PLAYERS_TO_SPECTATORS)) {
-            isExcessPlayersWasMoved = MoveExcessPlayers(MoveExcessPlayerType_ToSpectators);
-        } else if (StrEqual(info, DISTRIBUTE_EXCESS_PLAYERS)) {
-            isExcessPlayersWasMoved = MoveExcessPlayers(MoveExcessPlayerType_Distribute);
+        if (StrEqual(info, DISTRIBUTE_EXCESS_PLAYERS)) {
+            moveType = MoveExcessPlayerType_Distribute;
         }
 
-        if (isExcessPlayersWasMoved) {
-            CShowActivity2(param1, PREFIX_COLORED, "%t", "Teams was balanced");
-            LogAction(param1, -1, "\"%L\" balanced teams", param1);
-        } else {
-            CShowActivity2(param1, PREFIX_COLORED, "%t", "Teams already balanced");
+        bool isTeamsBalanced = PerformTeamsBalancing(param1, moveType);
+
+        if (!isTeamsBalanced) {
+            CPrintToChat(param1, "%s%t", PREFIX_COLORED, "Teams already balanced");
         }
     } else {
         MenuHandler_Default(menu, action, param1, param2)
@@ -155,46 +146,9 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
             return 0;
         }
 
-        switch (GetMovePlayerType(param1)) {
-            case MovePlayerType_Immediately: {
-                if (ChangePlayerTeamToOpposite(target)) {
-                    CShowActivity2(param1, PREFIX_COLORED, "%t", "Player was moved", target, OPPOSING_TEAM);
-                    LogAction(param1, target, "\"%L\" moved \"%L\" to %s", param1, target, OPPOSING_TEAM);
-                }
-            }
+        MovePlayerType moveType = GetMovePlayerType(param1);
 
-            case MovePlayerType_AfterDeath: {
-                if (IsMovePlayerFlagEnabled(target, MOVE_PLAYER_FLAG_AFTER_DEATH)) {
-                    DisableMovePlayerFlag(target, MOVE_PLAYER_FLAG_AFTER_DEATH);
-                    CShowActivity2(param1, PREFIX_COLORED, "%t", "Player will not be moved", target, AFTER_DEATH);
-                    LogAction(param1, target, "\"%L\" disabled flag '%s' on \"%L\"", param1, AFTER_DEATH, target);
-                } else {
-                    EnableMovePlayerFlag(target, MOVE_PLAYER_FLAG_AFTER_DEATH);
-                    CShowActivity2(param1, PREFIX_COLORED, "%t", "Player will be moved", target, AFTER_DEATH);
-                    LogAction(param1, target, "\"%L\" enabled flag '%s' on \"%L\"", param1, AFTER_DEATH, target);
-                }
-            }
-
-            case MovePlayerType_AfterRoundEnd: {
-                if (IsMovePlayerFlagEnabled(target, MOVE_PLAYER_FLAG_ROUND_END)) {
-                    DisableMovePlayerFlag(target, MOVE_PLAYER_FLAG_ROUND_END);
-                    CShowActivity2(param1, PREFIX_COLORED, "%t", "Player will not be moved", target, AFTER_ROUND_END);
-                    LogAction(param1, target, "\"%L\" disabled flag '%s' on \"%L\"", param1, AFTER_ROUND_END, target);
-                } else {
-                    EnableMovePlayerFlag(target, MOVE_PLAYER_FLAG_ROUND_END);
-                    CShowActivity2(param1, PREFIX_COLORED, "%t", "Player will be moved", target, AFTER_ROUND_END);
-                    LogAction(param1, target, "\"%L\" enabled flag '%s' on \"%L\"", param1, AFTER_ROUND_END, target);
-                }
-            }
-
-            case MovePlayerType_ToSpectators: {
-                if (MovePlayerToSpectators(target)) {
-                    CShowActivity2(param1, PREFIX_COLORED, "%t", "Player was moved", target, SPECTATORS);
-                    LogAction(param1, target, "\"%L\" moved \"%L\" to %s", param1, target, SPECTATORS);
-                }
-            }
-        }
-
+        PerformPlayerMovement(param1, target, moveType);
         CreatePlayersMenu(param1);
     } else if (action == MenuAction_Cancel) {
         if (param2 == MenuCancel_ExitBack) {
