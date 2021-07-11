@@ -37,12 +37,12 @@ public void TopMenuHandler_TeamManager(TopMenu topmenu, TopMenuAction action, To
             CreateMovePlayerMenu(param);
         } else if (topobj_id == g_menuItemSwapTeams) {
             if (SwapTeams()) {
-                CPrintToChatAll("%s%t", PREFIX_COLORED, "Teams was swapped");
+                CShowActivity2(param, PREFIX_COLORED, "%t", "Teams was swapped");
                 LogAction(param, -1, "\"%L\" swapped teams", param);
             }
         } else if (topobj_id == g_menuItemScrambleTeams) {
             if (ScrambleTeams()) {
-                CPrintToChatAll("%s%t", PREFIX_COLORED, "Teams was scrambled");
+                CShowActivity2(param, PREFIX_COLORED, "%t", "Teams was scrambled");
                 LogAction(param, -1, "\"%L\" scrambled teams", param);
             }
         } else if (topobj_id == g_menuItemBalanceTeams) {
@@ -116,11 +116,10 @@ public int MenuHandler_BalanceTeams(Menu menu, MenuAction action, int param1, in
         }
 
         if (isExcessPlayersWasMoved) {
-            CPrintToChatAll("%s%t", PREFIX_COLORED, "Teams was balanced");
+            CShowActivity2(param1, PREFIX_COLORED, "%t", "Teams was balanced");
             LogAction(param1, -1, "\"%L\" balanced teams", param1);
         } else {
-            CPrintToChat(param1, "%s%t", PREFIX_COLORED, "Teams already balanced");
-            LogAction(param1, -1, "\"%L\" tried to balance teams", param1);
+            CShowActivity2(param1, PREFIX_COLORED, "%t", "Teams already balanced");
         }
     } else {
         MenuHandler_Default(menu, action, param1, param2)
@@ -152,7 +151,6 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
         if (target == 0) {
             CreatePlayersMenu(param1);
             CPrintToChat(param1, "%s%t", PREFIX_COLORED, "Player is no longer available");
-            LogAction(param1, -1, "\"%L\" tried to move player", param1);
 
             return 0;
         }
@@ -160,7 +158,7 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
         switch (GetMovePlayerType(param1)) {
             case MovePlayerType_Immediately: {
                 if (ChangePlayerTeamToOpposite(target)) {
-                    CPrintToChatAll("%s%t", PREFIX_COLORED, "Player was moved", target, OPPOSING_TEAM);
+                    CShowActivity2(param1, PREFIX_COLORED, "%t", "Player was moved", target, OPPOSING_TEAM);
                     LogAction(param1, target, "\"%L\" moved \"%L\" to %s", param1, target, OPPOSING_TEAM);
                 }
             }
@@ -168,11 +166,11 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
             case MovePlayerType_AfterDeath: {
                 if (IsMovePlayerFlagEnabled(target, MOVE_PLAYER_FLAG_AFTER_DEATH)) {
                     DisableMovePlayerFlag(target, MOVE_PLAYER_FLAG_AFTER_DEATH);
-                    CPrintToChatAll("%s%t", PREFIX_COLORED, "Player will not be moved", target, AFTER_DEATH);
+                    CShowActivity2(param1, PREFIX_COLORED, "%t", "Player will not be moved", target, AFTER_DEATH);
                     LogAction(param1, target, "\"%L\" disabled flag '%s' on \"%L\"", param1, AFTER_DEATH, target);
                 } else {
                     EnableMovePlayerFlag(target, MOVE_PLAYER_FLAG_AFTER_DEATH);
-                    CPrintToChatAll("%s%t", PREFIX_COLORED, "Player will be moved", target, AFTER_DEATH);
+                    CShowActivity2(param1, PREFIX_COLORED, "%t", "Player will be moved", target, AFTER_DEATH);
                     LogAction(param1, target, "\"%L\" enabled flag '%s' on \"%L\"", param1, AFTER_DEATH, target);
                 }
             }
@@ -180,18 +178,18 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
             case MovePlayerType_AfterRoundEnd: {
                 if (IsMovePlayerFlagEnabled(target, MOVE_PLAYER_FLAG_ROUND_END)) {
                     DisableMovePlayerFlag(target, MOVE_PLAYER_FLAG_ROUND_END);
-                    CPrintToChatAll("%s%t", PREFIX_COLORED, "Player will not be moved", target, AFTER_ROUND_END);
+                    CShowActivity2(param1, PREFIX_COLORED, "%t", "Player will not be moved", target, AFTER_ROUND_END);
                     LogAction(param1, target, "\"%L\" disabled flag '%s' on \"%L\"", param1, AFTER_ROUND_END, target);
                 } else {
                     EnableMovePlayerFlag(target, MOVE_PLAYER_FLAG_ROUND_END);
-                    CPrintToChatAll("%s%t", PREFIX_COLORED, "Player will be moved", target, AFTER_ROUND_END);
+                    CShowActivity2(param1, PREFIX_COLORED, "%t", "Player will be moved", target, AFTER_ROUND_END);
                     LogAction(param1, target, "\"%L\" enabled flag '%s' on \"%L\"", param1, AFTER_ROUND_END, target);
                 }
             }
 
             case MovePlayerType_ToSpectators: {
                 if (MovePlayerToSpectators(target)) {
-                    CPrintToChatAll("%s%t", PREFIX_COLORED, "Player was moved", target, SPECTATORS);
+                    CShowActivity2(param1, PREFIX_COLORED, "%t", "Player was moved", target, SPECTATORS);
                     LogAction(param1, target, "\"%L\" moved \"%L\" to %s", param1, target, SPECTATORS);
                 }
             }
