@@ -37,7 +37,7 @@ Allows you to perform various operations on teams:
 
 ### Compiling
 
-Make sure, that you installed "spcomp" and you have it in your "PATH" variable.
+Make sure you have "spcomp" installed and you have it in your "PATH" variable. 
 
 * Clone this repository
 * Open terminal with path pointing to "scripting" folder of this plugin
