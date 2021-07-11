@@ -22,6 +22,19 @@ Allows you to perform various operations on teams:
 * Download latest [release](https://github.com/dronelektron/team-manager/releases) (compiled for SourceMod 1.10)
 * Extract "plugins" and "translations" folders to "addons/sourcemod" folder of your server
 
+### Console Commands
+
+* sm_tm_move_player <#userid|name> <type> - Move player:
+	* type 0: to opposing team
+	* type 1: after death
+	* type 2: after round end
+	* type 3: to spectators
+* sm_tm_swap_teams - Swap teams
+* sm_tm_scramble_teams - Scramble teams
+* sm_tm_balance_teams <type> - Balance teams:
+	* type 0: move excess players to spectators
+	* type 1: distribute excess players
+
 ### Compiling
 
 Make sure, that you installed "spcomp" and you have it in your "PATH" variable.
