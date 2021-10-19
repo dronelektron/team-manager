@@ -1,5 +1,7 @@
 #include <sourcemod>
 
+#pragma newdecls required
+
 #include "action"
 #include "command"
 #include "event"
