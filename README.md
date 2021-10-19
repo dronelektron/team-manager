@@ -34,11 +34,3 @@ Allows you to perform various operations on teams:
 * sm_tm_balance_teams  &lt;type&gt; - Balance teams:
 	* type 0: move excess players to spectators
 	* type 1: distribute excess players
-
-### Compiling
-
-Make sure you have "spcomp" installed and you have it in your "PATH" variable. 
-
-* Clone this repository
-* Open terminal with path pointing to "scripting" folder of this plugin
-* Type the following: `spcomp team-manager.sp modules/*.sp -i include -o ../plugins/team-manager.smx`
