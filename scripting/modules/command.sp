@@ -1,6 +1,6 @@
 public Action Command_MovePlayer(int client, int args) {
     if (args < 2) {
-        ReplyToCommand(client, "%s%s", COMMAND_USAGE_PREFIX, COMMAND_DESCRIPTION_MOVE_PLAYER);
+        MessageReply_MovePlayerUsage(client);
 
         return Plugin_Handled;
     }
@@ -15,27 +15,27 @@ public Action Command_MovePlayer(int client, int args) {
     MovePlayerType moveType = view_as<MovePlayerType>(StringToInt(moveTypeArg));
 
     if (target > -1) {
-        PerformPlayerMovement(client, target, moveType);
+        UseCase_MovePlayer(client, target, moveType);
     }
 
     return Plugin_Handled;
 }
 
 public Action Command_SwapTeams(int client, int args) {
-    PerformTeamsSwapping(client);
+    UseCase_SwapTeams(client);
 
     return Plugin_Handled;
 }
 
 public Action Command_ScrambleTeams(int client, int args) {
-    PerformTeamsScrambling(client);
+    UseCase_ScrambleTeams(client);
 
     return Plugin_Handled;
 }
 
 public Action Command_BalanceTeams(int client, int args) {
     if (args < 1) {
-        ReplyToCommand(client, "%s%s", COMMAND_USAGE_PREFIX, COMMAND_DESCRIPTION_BALANCE_TEAMS);
+        MessageReply_BalanceTeamsUsage(client);
 
         return Plugin_Handled;
     }
@@ -46,9 +46,7 @@ public Action Command_BalanceTeams(int client, int args) {
 
     MoveExcessPlayerType moveType = view_as<MoveExcessPlayerType>(StringToInt(balanceTypeArg));
 
-    if (!PerformTeamsBalancing(client, moveType)) {
-        ReplyToCommand(client, "%s%t", PREFIX, "Teams already balanced");
-    }
+    UseCase_BalanceTeams(client, moveType);
 
     return Plugin_Handled;
 }

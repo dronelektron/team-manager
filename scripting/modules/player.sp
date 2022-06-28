@@ -2,43 +2,43 @@ static int g_playerCaptures[MAXPLAYERS + 1];
 static int g_movePlayerFlags[MAXPLAYERS + 1];
 static MovePlayerType g_movePlayerType[MAXPLAYERS + 1];
 
-int GetPlayerCaptures(int client) {
+int Player_GetCaptures(int client) {
     return g_playerCaptures[client];
 }
 
-void ResetPlayerCaptures(int client) {
+void Player_ResetCaptures(int client) {
     g_playerCaptures[client] = 0;
 }
 
-void IncrementPlayerCaptures(int client) {
+void Player_IncrementCaptures(int client) {
     g_playerCaptures[client]++;
 }
 
-bool IsMovePlayerFlagEnabled(int client, int flag) {
+bool Player_IsMoveFlagEnabled(int client, int flag) {
     return (g_movePlayerFlags[client] & flag) == flag;
 }
 
-void ResetMovePlayerFlags(int client) {
+void Player_ResetMoveFlags(int client) {
     g_movePlayerFlags[client] = 0;
 }
 
-void EnableMovePlayerFlag(int client, int flag) {
+void Player_EnableMoveFlag(int client, int flag) {
     g_movePlayerFlags[client] |= flag;
 }
 
-void DisableMovePlayerFlag(int client, int flag) {
+void Player_DisableMoveFlag(int client, int flag) {
     g_movePlayerFlags[client] &= ~flag;
 }
 
-MovePlayerType GetMovePlayerType(int client) {
+MovePlayerType Player_GetMoveType(int client) {
     return g_movePlayerType[client];
 }
 
-void SetMovePlayerType(int client, MovePlayerType type) {
+void Player_SetMoveType(int client, MovePlayerType type) {
     g_movePlayerType[client] = type;
 }
 
-ArrayList GetPlayers(PlayerPredicate predicate) {
+ArrayList Player_GetAll(PlayerPredicate predicate) {
     ArrayList players = new ArrayList();
     bool predicateResult;
 
@@ -59,7 +59,7 @@ ArrayList GetPlayers(PlayerPredicate predicate) {
     return players;
 }
 
-ArrayList TakeFirstPlayers(ArrayList players, int count) {
+ArrayList Player_TakeFirst(ArrayList players, int count) {
     ArrayList result = new ArrayList();
 
     for (int i = 0; i < count; i++) {
@@ -75,7 +75,7 @@ bool PlayerPredicate_All(int client) {
     return true;
 }
 
-bool PlayerPredicate_ActivePlayers(int client) {
+bool PlayerPredicate_ActivePlayer(int client) {
     int team = GetClientTeam(client);
 
     return team == TEAM_ALLIES || team == TEAM_AXIS;
@@ -90,5 +90,5 @@ bool PlayerPredicate_Axis(int client) {
 }
 
 bool PlayerPredicate_WithRoundEndFlag(int client) {
-    return IsMovePlayerFlagEnabled(client, MOVE_PLAYER_FLAG_ROUND_END);
+    return Player_IsMoveFlagEnabled(client, MOVE_PLAYER_FLAG_ROUND_END);
 }

@@ -1,7 +1,10 @@
 #if defined _player_included
-    #endinput
+ #endinput
 #endif
 #define _player_included
+
+#define MOVE_PLAYER_FLAG_AFTER_DEATH (1 << 0)
+#define MOVE_PLAYER_FLAG_ROUND_END (1 << 1)
 
 enum MovePlayerType {
     MovePlayerType_Immediately = 0,
@@ -9,8 +12,5 @@ enum MovePlayerType {
     MovePlayerType_AfterRoundEnd,
     MovePlayerType_ToSpectators
 };
-
-const int MOVE_PLAYER_FLAG_AFTER_DEATH = (1 << 0);
-const int MOVE_PLAYER_FLAG_ROUND_END = (1 << 1);
 
 typedef PlayerPredicate = function bool (int client);

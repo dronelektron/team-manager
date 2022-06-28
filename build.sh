@@ -1,3 +1,6 @@
 #!/bin/bash
 
-spcomp scripting/team-manager.sp scripting/modules/*.sp -i scripting/include -o plugins/team-manager.smx
+PLUGIN_NAME="team-manager"
+
+cd scripting
+spcomp $PLUGIN_NAME.sp -i include -o ../plugins/$PLUGIN_NAME.smx
