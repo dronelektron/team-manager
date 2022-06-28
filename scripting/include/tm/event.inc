@@ -1,6 +1,6 @@
 #if defined _event_included
-    #endinput
+ #endinput
 #endif
 #define _event_included
 
-const int EVENT_STRING_MAX_SIZE = 256;
+#define EVENT_STRING_MAX_SIZE 256

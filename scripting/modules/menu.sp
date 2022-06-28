@@ -1,21 +1,51 @@
-TopMenuObject g_teamManagerCategory = INVALID_TOPMENUOBJECT;
-TopMenuObject g_menuItemMovePlayer = INVALID_TOPMENUOBJECT;
-TopMenuObject g_menuItemSwapTeams = INVALID_TOPMENUOBJECT;
-TopMenuObject g_menuItemScrambleTeams = INVALID_TOPMENUOBJECT;
-TopMenuObject g_menuItemBalanceTeams = INVALID_TOPMENUOBJECT;
+static TopMenu g_adminMenu = null;
 
-void AddTeamManagerToAdminMenu() {
-    g_teamManagerCategory = g_adminMenu.AddCategory(TEAM_MANAGER, TopMenuHandler_TeamManager);
+static TopMenuObject g_teamManagerCategory = INVALID_TOPMENUOBJECT;
+static TopMenuObject g_menuItemMovePlayer = INVALID_TOPMENUOBJECT;
+static TopMenuObject g_menuItemSwapTeams = INVALID_TOPMENUOBJECT;
+static TopMenuObject g_menuItemScrambleTeams = INVALID_TOPMENUOBJECT;
+static TopMenuObject g_menuItemBalanceTeams = INVALID_TOPMENUOBJECT;
 
-    if (g_teamManagerCategory != INVALID_TOPMENUOBJECT) {
-        g_menuItemMovePlayer = g_adminMenu.AddItem(MOVE_PLAYER, TopMenuHandler_TeamManager, g_teamManagerCategory);
-        g_menuItemSwapTeams = g_adminMenu.AddItem(SWAP_TEAMS, TopMenuHandler_TeamManager, g_teamManagerCategory);
-        g_menuItemScrambleTeams = g_adminMenu.AddItem(SCRAMBLE_TEAMS, TopMenuHandler_TeamManager, g_teamManagerCategory);
-        g_menuItemBalanceTeams = g_adminMenu.AddItem(BALANCE_TEAMS, TopMenuHandler_TeamManager, g_teamManagerCategory);
+void AdminMenu_Create() {
+    TopMenu topMenu = GetAdminTopMenu();
+
+    if (LibraryExists(ADMIN_MENU) && topMenu != null) {
+        OnAdminMenuReady(topMenu);
     }
 }
 
-public void TopMenuHandler_TeamManager(TopMenu topmenu, TopMenuAction action, TopMenuObject topobj_id, int param, char[] buffer, int maxlength) {
+void AdminMenu_Destroy() {
+    g_adminMenu = null;
+}
+
+void AdminMenu_OnReady(Handle topMenuHandle) {
+    TopMenu topMenu = TopMenu.FromHandle(topMenuHandle);
+
+    if (topMenu == g_adminMenu) {
+        return;
+    }
+
+    g_adminMenu = topMenu;
+
+    AdminMenu_Fill();
+}
+
+void AdminMenu_Fill() {
+    g_teamManagerCategory = g_adminMenu.AddCategory(TEAM_MANAGER, AdminMenuHandler_TeamManager);
+
+    if (g_teamManagerCategory != INVALID_TOPMENUOBJECT) {
+        g_menuItemMovePlayer = AdminMenu_AddItem(MOVE_PLAYER);
+        g_menuItemSwapTeams = AdminMenu_AddItem(SWAP_TEAMS);
+        g_menuItemScrambleTeams = AdminMenu_AddItem(SCRAMBLE_TEAMS);
+        g_menuItemBalanceTeams = AdminMenu_AddItem(BALANCE_TEAMS);
+    }
+}
+
+TopMenuObject AdminMenu_AddItem(const char[] name) {
+    return g_adminMenu.AddItem(name, AdminMenuHandler_TeamManager, g_teamManagerCategory);
+}
+
+public void AdminMenuHandler_TeamManager(TopMenu topmenu, TopMenuAction action, TopMenuObject topobj_id, int param, char[] buffer, int maxlength) {
     if (action == TopMenuAction_DisplayOption) {
         if (topobj_id == g_teamManagerCategory) {
             Format(buffer, maxlength, "%T", TEAM_MANAGER, param);
@@ -34,26 +64,26 @@ public void TopMenuHandler_TeamManager(TopMenu topmenu, TopMenuAction action, To
         }
     } else if (action == TopMenuAction_SelectOption) {
         if (topobj_id == g_menuItemMovePlayer) {
-            CreateMovePlayerMenu(param);
+            Menu_MovePlayer(param);
         } else if (topobj_id == g_menuItemSwapTeams) {
-            PerformTeamsSwapping(param);
+            UseCase_SwapTeams(param);
         } else if (topobj_id == g_menuItemScrambleTeams) {
-            PerformTeamsScrambling(param);
+            UseCase_ScrambleTeams(param);
         } else if (topobj_id == g_menuItemBalanceTeams) {
-            CreateBalanceTeamsMenu(param);
+            Menu_BalanceTeams(param);
         }
     }
 }
 
-void CreateMovePlayerMenu(int client) {
+void Menu_MovePlayer(int client) {
     Menu menu = new Menu(MenuHandler_MovePlayer);
 
     menu.SetTitle("%T", MOVE_PLAYER, client);
 
-    AddFormattedItem(menu, IMMEDIATELY, client);
-    AddFormattedItem(menu, AFTER_DEATH, client);
-    AddFormattedItem(menu, AFTER_ROUND_END, client);
-    AddFormattedItem(menu, TO_SPECTATORS, client);
+    Menu_AddItem(menu, IMMEDIATELY, client);
+    Menu_AddItem(menu, AFTER_DEATH, client);
+    Menu_AddItem(menu, AFTER_ROUND_END, client);
+    Menu_AddItem(menu, TO_SPECTATORS, client);
 
     menu.ExitBackButton = true;
     menu.Display(client, MENU_TIME_FOREVER);
@@ -66,16 +96,16 @@ public int MenuHandler_MovePlayer(Menu menu, MenuAction action, int param1, int 
         menu.GetItem(param2, info, sizeof(info));
 
         if (StrEqual(info, IMMEDIATELY)) {
-            SetMovePlayerType(param1, MovePlayerType_Immediately);
+            Player_SetMoveType(param1, MovePlayerType_Immediately);
         } else if (StrEqual(info, AFTER_DEATH)) {
-            SetMovePlayerType(param1, MovePlayerType_AfterDeath);
+            Player_SetMoveType(param1, MovePlayerType_AfterDeath);
         } else if (StrEqual(info, AFTER_ROUND_END)) {
-            SetMovePlayerType(param1, MovePlayerType_AfterRoundEnd);
+            Player_SetMoveType(param1, MovePlayerType_AfterRoundEnd);
         } else {
-            SetMovePlayerType(param1, MovePlayerType_ToSpectators);
+            Player_SetMoveType(param1, MovePlayerType_ToSpectators);
         }
 
-        CreatePlayersMenu(param1);
+        Menu_Players(param1);
     } else {
         MenuHandler_Default(menu, action, param1, param2);
     }
@@ -83,13 +113,13 @@ public int MenuHandler_MovePlayer(Menu menu, MenuAction action, int param1, int 
     return 0;
 }
 
-void CreateBalanceTeamsMenu(int client) {
+void Menu_BalanceTeams(int client) {
     Menu menu = new Menu(MenuHandler_BalanceTeams);
 
     menu.SetTitle("%T", BALANCE_TEAMS, client);
 
-    AddFormattedItem(menu, MOVE_EXCESS_PLAYERS_TO_SPECTATORS, client);
-    AddFormattedItem(menu, DISTRIBUTE_EXCESS_PLAYERS, client);
+    Menu_AddItem(menu, MOVE_EXCESS_PLAYERS_TO_SPECTATORS, client);
+    Menu_AddItem(menu, DISTRIBUTE_EXCESS_PLAYERS, client);
 
     menu.ExitBackButton = true;
     menu.Display(client, MENU_TIME_FOREVER);
@@ -107,11 +137,7 @@ public int MenuHandler_BalanceTeams(Menu menu, MenuAction action, int param1, in
             moveType = MoveExcessPlayerType_Distribute;
         }
 
-        bool isTeamsBalanced = PerformTeamsBalancing(param1, moveType);
-
-        if (!isTeamsBalanced) {
-            PrintToChat(param1, "%s%t", PREFIX, "Teams already balanced");
-        }
+        UseCase_BalanceTeams(param1, moveType);
     } else {
         MenuHandler_Default(menu, action, param1, param2);
     }
@@ -119,12 +145,12 @@ public int MenuHandler_BalanceTeams(Menu menu, MenuAction action, int param1, in
     return 0;
 }
 
-void CreatePlayersMenu(int client) {
+void Menu_Players(int client) {
     Menu menu = new Menu(MenuHandler_Players);
 
     menu.SetTitle("%T", SELECT_PLAYER, client);
 
-    AddPlayersToMenu(client, menu);
+    Menu_AddPlayers(client, menu);
 
     menu.ExitBackButton = true;
     menu.Display(client, MENU_TIME_FOREVER);
@@ -140,19 +166,19 @@ public int MenuHandler_Players(Menu menu, MenuAction action, int param1, int par
         int target = GetClientOfUserId(userId);
 
         if (target == 0) {
-            CreatePlayersMenu(param1);
-            PrintToChat(param1, "%s%t", PREFIX, "Player is no longer available");
+            Menu_Players(param1);
+            MessagePrint_PlayerIsNoLongerAvailable(param1);
 
             return 0;
         }
 
-        MovePlayerType moveType = GetMovePlayerType(param1);
+        MovePlayerType moveType = Player_GetMoveType(param1);
 
-        PerformPlayerMovement(param1, target, moveType);
-        CreatePlayersMenu(param1);
+        UseCase_MovePlayer(param1, target, moveType);
+        Menu_Players(param1);
     } else if (action == MenuAction_Cancel) {
         if (param2 == MenuCancel_ExitBack) {
-            CreateMovePlayerMenu(param1);
+            Menu_MovePlayer(param1);
         }
     } else {
         MenuHandler_Default(menu, action, param1, param2);
@@ -171,7 +197,7 @@ void MenuHandler_Default(Menu menu, MenuAction action, int param1, int param2) {
     }
 }
 
-void AddFormattedItem(Menu menu, const char[] phrase, int client) {
+void Menu_AddItem(Menu menu, const char[] phrase, int client) {
     char buffer[TEXT_BUFFER_MAX_SIZE];
 
     Format(buffer, sizeof(buffer), "%T", phrase, client);
@@ -179,8 +205,8 @@ void AddFormattedItem(Menu menu, const char[] phrase, int client) {
     menu.AddItem(phrase, buffer);
 }
 
-void AddPlayersToMenu(int client, Menu menu) {
-    ArrayList players = GetPlayers(PlayerPredicate_ActivePlayers);
+void Menu_AddPlayers(int client, Menu menu) {
+    ArrayList players = Player_GetAll(PlayerPredicate_ActivePlayer);
 
     for (int i = 0; i < players.Length; i++) {
         int player = players.Get(i);
@@ -190,17 +216,17 @@ void AddPlayersToMenu(int client, Menu menu) {
 
         IntToString(userId, userIdStr, sizeof(userIdStr));
 
-        switch (GetMovePlayerType(client)) {
+        switch (Player_GetMoveType(client)) {
             case MovePlayerType_AfterDeath: {
-                bool isMovePlayerAfterDeath = IsMovePlayerFlagEnabled(player, MOVE_PLAYER_FLAG_AFTER_DEATH);
+                bool isMovePlayerAfterDeath = Player_IsMoveFlagEnabled(player, MOVE_PLAYER_FLAG_AFTER_DEATH);
 
-                FormatPlayerItem(item, sizeof(item), player, isMovePlayerAfterDeath);
+                Menu_FormatPlayerItem(item, sizeof(item), player, isMovePlayerAfterDeath);
             }
 
             case MovePlayerType_AfterRoundEnd: {
-                bool isMovePlayerAfterRoundEnd = IsMovePlayerFlagEnabled(player, MOVE_PLAYER_FLAG_ROUND_END);
+                bool isMovePlayerAfterRoundEnd = Player_IsMoveFlagEnabled(player, MOVE_PLAYER_FLAG_ROUND_END);
 
-                FormatPlayerItem(item, sizeof(item), player, isMovePlayerAfterRoundEnd);
+                Menu_FormatPlayerItem(item, sizeof(item), player, isMovePlayerAfterRoundEnd);
             }
 
             default: {
@@ -214,7 +240,7 @@ void AddPlayersToMenu(int client, Menu menu) {
     delete players;
 }
 
-void FormatPlayerItem(char[] item, int itemMaxLen, int player, bool condition) {
+void Menu_FormatPlayerItem(char[] item, int itemMaxLen, int player, bool condition) {
     if (condition) {
         Format(item, itemMaxLen, MENU_PLAYER_ITEM_ENABLED, player);
     } else {
