@@ -22,7 +22,7 @@ public Plugin myinfo = {
     name = "Team manager",
     author = "Dron-elektron",
     description = "Allows you to perform various operations on teams",
-    version = "0.2.0",
+    version = "1.0.0",
     url = "https://github.com/dronelektron/team-manager"
 };
 
