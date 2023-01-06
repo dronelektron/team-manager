@@ -108,21 +108,43 @@ void UseCase_SwapTeams(int client) {
 }
 
 void UseCase_ScrambleTeams(int client) {
-    ArrayList players = Player_GetAll(PlayerPredicate_ActivePlayer);
-    // Fisher-Yates shuffle
+    ArrayList allies = Player_GetAll(PlayerPredicate_Allies);
+    ArrayList axis = Player_GetAll(PlayerPredicate_Axis);
+
+    UseCase_FisherYatesShuffle(allies);
+    UseCase_FisherYatesShuffle(axis);
+
+    bool areTeamsScrambled = false;
+
+    areTeamsScrambled |= UseCase_MoveHalfOfPlayersToOppositeTeam(allies);
+    areTeamsScrambled |= UseCase_MoveHalfOfPlayersToOppositeTeam(axis);
+
+    delete allies;
+    delete axis;
+
+    if (areTeamsScrambled) {
+        Message_TeamsWasScrambled(client);
+    }
+}
+
+void UseCase_FisherYatesShuffle(ArrayList players) {
     for (int i = players.Length - 1; i > 0; i--) {
         int j = GetRandomInt(0, i);
 
         players.SwapAt(i, j);
     }
+}
 
-    bool areTeamsScrambled = UseCase_AssignTeams(players);
+bool UseCase_MoveHalfOfPlayersToOppositeTeam(ArrayList players) {
+    int playersAmount = players.Length / 2;
 
-    delete players;
+    for (int i = 0; i < playersAmount; i++) {
+        int player = players.Get(i);
 
-    if (areTeamsScrambled) {
-        Message_TeamsWasScrambled(client);
+        UseCase_MovePlayerToOppositeTeam(player);
     }
+
+    return playersAmount > 0;
 }
 
 void UseCase_BalanceTeams(int client, MoveExcessPlayerType moveType) {
