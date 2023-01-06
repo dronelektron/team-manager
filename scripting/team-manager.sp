@@ -2,9 +2,6 @@
 #undef REQUIRE_PLUGIN
 #include <adminmenu>
 
-#pragma semicolon 1
-#pragma newdecls required
-
 #include "tm/command"
 #include "tm/event"
 #include "tm/menu"
