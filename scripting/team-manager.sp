@@ -2,9 +2,6 @@
 #undef REQUIRE_PLUGIN
 #include <adminmenu>
 
-#pragma semicolon 1
-#pragma newdecls required
-
 #include "tm/command"
 #include "tm/event"
 #include "tm/menu"
@@ -22,7 +19,7 @@ public Plugin myinfo = {
     name = "Team manager",
     author = "Dron-elektron",
     description = "Allows you to perform various operations on teams",
-    version = "1.0.1",
+    version = "1.0.2",
     url = "https://github.com/dronelektron/team-manager"
 };
 
